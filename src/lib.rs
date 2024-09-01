@@ -3,6 +3,7 @@ pub mod branch_compare;
 pub mod data_structurize;
 pub mod versions_compare;
 pub mod process_lib_types;
+pub mod tests;
 
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
