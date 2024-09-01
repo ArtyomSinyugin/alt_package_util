@@ -6,7 +6,7 @@ const URL_P10: &str = "https://rdb.altlinux.org/api/export/branch_binary_package
 
 #[derive(Parser)]
 #[command(name = "Package Comparer")]
-#[command(about = "Compares packages between p10 and sisyphus branches", long_about = None)]
+#[command(about = "Compares packages in p10 and sisyphus branches", long_about = None)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
