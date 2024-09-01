@@ -82,15 +82,9 @@ fn main () {
                 let input_arch = arch_from_str(arch).expect("Error: unknown architecture!");
                 let compare_result = compare_result
                     .iter()
-                    .find_map(|compare_result| {
-                        if compare_result.arch == input_arch {
-                            Some(compare_result.unique_for_p10.clone())
-                        } else {
-                            Some(Vec::new())
-                        }
-                    })
+                    .find(|compare_result| compare_result.arch == input_arch)
                     .expect("Could not find comparison result for choosen arch");
-                json = serde_json::to_string_pretty(&compare_result).expect("Could not recieve unique p10 json from comparison result");
+                json = serde_json::to_string_pretty(&compare_result.unique_for_p10).expect("Could not recieve unique p10 json from comparison result");
             } else {
                 let mut json_temp = String::new();
                 for result in compare_result {
@@ -106,15 +100,9 @@ fn main () {
                 let input_arch = arch_from_str(arch).expect("Error: unknown architecture!");
                 let compare_result = compare_result
                     .iter()
-                    .find_map(|compare_result| {
-                        if compare_result.arch == input_arch {
-                            Some(compare_result.unique_for_sisyphus.clone())
-                        } else {
-                            Some(Vec::new())
-                        }
-                    })
+                    .find(|compare_result| compare_result.arch == input_arch)
                     .expect("Could not find comparison result for choosen arch");
-                json = serde_json::to_string_pretty(&compare_result).expect("Could not recieve unique sisyphus json from comparison result");
+                json = serde_json::to_string_pretty(&compare_result.unique_for_sisyphus).expect("Could not recieve unique sisyphus json from comparison result");
             } else {
                 let mut json_temp = String::new();
                 for result in compare_result {
@@ -130,15 +118,9 @@ fn main () {
                 let input_arch = arch_from_str(arch).expect("Error: unknown architecture!");
                 let compare_result = compare_result
                     .iter()
-                    .find_map(|compare_result| {
-                        if compare_result.arch == input_arch {
-                            Some(compare_result.sisyphus_has_greater_version.clone())
-                        } else {
-                            Some(Vec::new())
-                        }
-                    })
+                    .find(|compare_result| compare_result.arch == input_arch)
                     .expect("Could not find comparison result for choosen arch");
-                json = serde_json::to_string_pretty(&compare_result).expect("Could not recieve greater version packages for sisyphus in json from comparison result");
+                json = serde_json::to_string_pretty(&compare_result.sisyphus_has_greater_version).expect("Could not recieve greater version packages for sisyphus in json from comparison result");
             } else {
                 let mut json_temp = String::new();
                 for result in compare_result {

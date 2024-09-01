@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 
 #[derive(Debug, Eq, PartialEq)]
 enum VersionComponent {
-    Numeric(u32),
+    Numeric(u64),
     Alphanumeric(String),
 }
 
