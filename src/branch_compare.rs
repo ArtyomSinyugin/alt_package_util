@@ -1,4 +1,4 @@
-use crate::{versions_compare::Version, CompareResult, Sisyphus, P10};
+use crate::{versions_compare::PackageVersionRelease, CompareResult, Sisyphus, P10};
 
 pub fn compare(sisyphus: Sisyphus, mut p10: P10) -> Vec<CompareResult> {
     let mut compare_result: Vec<CompareResult> = Vec::new();
@@ -13,7 +13,8 @@ pub fn compare(sisyphus: Sisyphus, mut p10: P10) -> Vec<CompareResult> {
             let p10_value = p10.get_mut(&arch).expect("Could not get value in p10 by sisyphus arch");
             for (package_name, package_info) in v_sis {
                 if p10_value.contains_key(&package_name) {
-                    if Version::new(&package_info.version) > Version::new(&p10_value.get(&package_name).expect("Package unwrap compare error").version) {
+                    let p10_value_to_compare = p10_value.get(&package_name).expect("Package unwrap compare error");
+                    if PackageVersionRelease::new(&package_info.version, &package_info.release) > PackageVersionRelease::new(&p10_value_to_compare.version, &p10_value_to_compare.release) {
                         compare_temp.sisyphus_has_greater_version.push(package_info.clone());
                     }
                     p10_value.remove(&package_name);

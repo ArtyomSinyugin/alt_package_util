@@ -27,6 +27,7 @@ fn compare_test() {
         assert!(test_result2);
         assert!(test_result3);
     });
+    println!("{:?}", compare_result);
 }
 
 #[cfg(test)]
@@ -40,7 +41,7 @@ const SISYPHUS_DATA: &str = r#"
     {"name": "389-ds-base-debuginfo", "epoch": 0, "version": "2.4.6", "release": "alt1", "arch": "aarch64", "disttag": "sisyphus+355588.100.2.1", "buildtime": 1724238943, "source": "389-ds-base"}, 
     {"name": "389-ds-base-devel", "epoch": 0, "version": "2.4.6", "release": "alt1", "arch": "aarch64", "disttag": "sisyphus+355588.100.2.1", "buildtime": 1724238943, "source": "389-ds-base"}, 
     {"name": "86box-debuginfo", "epoch": 0, "version": "4.2", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+356214.100.1.1", "buildtime": 1724794815, "source": "86box"}, 
-    {"name": "9wm", "epoch": 0, "version": "1.4.1", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+259420.100.1.1", "buildtime": 1602159269, "source": "9wm"}, 
+    {"name": "9wm", "epoch": 0, "version": "1.4.1", "release": "alt3", "arch": "aarch64", "disttag": "sisyphus+259420.100.1.1", "buildtime": 1602159269, "source": "9wm"}, 
     {"name": "9wm-debuginfo", "epoch": 0, "version": "1.4.1", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+259420.100.1.1", "buildtime": 1602159269, "source": "9wm"}, 
     {"name": "AFLplusplus", "epoch": 0, "version": "4.21c", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+355171.400.4.1", "buildtime": 1723712683, "source": "AFLplusplus"}, 
     {"name": "AFLplusplus-debuginfo", "epoch": 0, "version": "4.21c", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+355171.400.4.1", "buildtime": 1723712683, "source": "AFLplusplus"}]}
@@ -53,6 +54,7 @@ const P10_DATA: &str = r#"
     [{"name": "0ad", "epoch": 1, "version": "0.0.26", "release": "alt0_1_alpha.p10", "arch": "aarch64", "disttag": "p10+307479.400.5.1", "buildtime": 1665497454, "source": "0ad"},
     {"name": "AFLplusplus", "epoch": 0, "version": "4.20c", "release": "alt1", "arch": "aarch64", "disttag": "p10+345310.100.2.1", "buildtime": 1713865829, "source": "AFLplusplus"},
     {"name": "86box-debuginfo", "epoch": 0, "version": "4.2", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+356214.100.1.1", "buildtime": 1724794815, "source": "86box"}, 
-    {"name": "86box_tsdtd", "epoch": 0, "version": "4.2", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+356214.100.1.1", "buildtime": 1724794815, "source": "86box"}
+    {"name": "86box_tsdtd", "epoch": 0, "version": "4.2", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+356214.100.1.1", "buildtime": 1724794815, "source": "86box"},
+    {"name": "9wm", "epoch": 0, "version": "1.4.1", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+259420.100.1.1", "buildtime": 1602159269, "source": "9wm"}
 ]}
 "#;

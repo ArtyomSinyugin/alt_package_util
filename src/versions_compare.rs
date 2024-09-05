@@ -25,12 +25,12 @@ impl Ord for VersionComponent {
 }
 
 #[derive(Debug, Eq, PartialEq)]
-pub struct Version {
+struct Version {
     components: Vec<VersionComponent>,
 }
 
 impl Version {
-    pub fn new(version_str: &str) -> Self {
+    fn new(version_str: &str) -> Self {
         let mut components = Vec::new();
         let mut current = String::new();
 
@@ -85,6 +85,40 @@ impl PartialOrd for Version {
 }
 
 impl Ord for Version {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.partial_cmp(other).unwrap()
+    }
+}
+
+#[derive(Debug, Eq, PartialEq)]
+pub struct PackageVersionRelease {
+    version: Version,
+    release: Version,
+}
+
+impl PackageVersionRelease {
+    pub fn new(version: &str, release: &str) -> Self {
+        let version = Version::new(version);
+        let release = if release.len() > 1 {
+            let (_, release) = release.split_at(3);
+            Version::new(release)
+        } else {
+            Version::new("")
+        };
+        PackageVersionRelease { version, release }
+    }
+}
+
+impl PartialOrd for PackageVersionRelease {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        match self.version.partial_cmp(&other.version) {
+            Some(Ordering::Equal) => self.release.partial_cmp(&other.release),
+            ord => ord,
+        }
+    }
+}
+
+impl Ord for PackageVersionRelease {
     fn cmp(&self, other: &Self) -> Ordering {
         self.partial_cmp(other).unwrap()
     }
