@@ -35,11 +35,11 @@ pub struct PackageInfo {
     pub release: String,
     #[serde(rename = "arch")]
     pub arch: String,
-    #[serde(rename = "disttag")]
+    #[serde(rename = "disttag", skip_serializing)]
     disttag: String,
-    #[serde(rename = "buildtime")]
+    #[serde(rename = "buildtime", skip_serializing)]
     buildtime: u64,
-    #[serde(rename = "source")]
+    #[serde(rename = "source", skip_serializing)]
     source: String,
 }
 
