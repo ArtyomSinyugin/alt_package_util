@@ -2,7 +2,13 @@
 Compares packages in p10 and sisyphus branches and gives output in json
 
 ## CLI commands
-Usage: `alt_pm <COMMAND>`
+Usage: `alt_pm [OPTIONS] <COMMAND>`
+
+Options:
+  -m, --main-branch <MAIN_BRANCH>  URL of the main branch to compare [default: https://rdb.altlinux.org/api/export/branch_binary_packages/sisyphus]
+  -s, --sub-branch <SUB_BRANCH>    URL of the sub branch to compare [default: https://rdb.altlinux.org/api/export/branch_binary_packages/p10]
+  -h, --help                       Print help
+  -V, --version                    Print version
 
 Commands:
 * `all-output`       Show all data output in json, including all packages unique for p10, all packages unique for sisyphus, all packages with version-release greater in sisyphus then in p10 branch

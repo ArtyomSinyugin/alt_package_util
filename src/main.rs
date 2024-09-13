@@ -1,24 +1,27 @@
 use alt_pm::{branch_compare::compare, data_structurize::{arch_from_str, structurize}, fetch_from_url::fetch_packages, Sisyphus, P10};
 use clap::{Parser, Subcommand};
 
-const URL_SISYPHUS: &str = "https://rdb.altlinux.org/api/export/branch_binary_packages/sisyphus";
-const URL_P10: &str = "https://rdb.altlinux.org/api/export/branch_binary_packages/p10";
-
 // send output to file with -o flag(e.g. output.json as default or other)
 // simplify json structure 
 // do comparisment only for chosen via command line parameter architechture
-// make possible to compare any two branches
-// package compare via evr done. look at how can I do it via rpm crate
+// DONE. make possible to compare any two branches
+// DONE. package compare via evr done. look at how can I do it via rpm crate
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(name = "Package Comparer")]
-#[command(about = "Compares packages in p10 and sisyphus branches", long_about = None)]
+#[command(version, about = "Compares packages in p10 and sisyphus branches", long_about = None)]
 struct Cli {
+    /// URL of the main branch to compare
+    #[arg(short, long, default_value = "https://rdb.altlinux.org/api/export/branch_binary_packages/sisyphus")]
+    main_branch: String,
+    /// URL of the sub branch to compare
+    #[arg(short, long, default_value = "https://rdb.altlinux.org/api/export/branch_binary_packages/p10")]
+    sub_branch: String,
     #[command(subcommand)]
     command: Commands,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 enum Commands {
     /// Show all data output, including
     /// all packages unique for p10,
@@ -46,19 +49,21 @@ enum Commands {
 }
 
 fn main () {
-    let url_sis_packages = match fetch_packages(URL_SISYPHUS) {
+    let cli = Cli::parse();
+
+    let url_sis_packages = match fetch_packages(&cli.main_branch) {
         Ok(data) => data,
         Err(_) =>{ 
-            println!("No data from {URL_SISYPHUS}!");
+            println!("No data from {}!", &cli.main_branch);
             Vec::new()
         },
     };
     let sis_packages: Sisyphus = structurize(url_sis_packages);
 
-    let url_p10_packages = match fetch_packages(URL_P10) {
+    let url_p10_packages = match fetch_packages(&cli.sub_branch) {
         Ok(data) => data,
         Err(_) =>{ 
-            println!("No data from {URL_P10}!");
+            println!("No data from {}!", &cli.main_branch);
             Vec::new()
         },
     };
@@ -66,7 +71,8 @@ fn main () {
 
     let compare_result = compare(sis_packages, p10_packages);
 
-    let cli = Cli::parse();
+
+
     match &cli.command {
         Commands::AllOutput { arch } => {
             let json: String;
