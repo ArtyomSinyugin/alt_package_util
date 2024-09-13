@@ -92,12 +92,13 @@ impl Ord for Version {
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct PackageVersionRelease {
+    epoch: u32,
     version: Version,
     release: Version,
 }
 
 impl PackageVersionRelease {
-    pub fn new(version: &str, release: &str) -> Self {
+    pub fn new(epoch: u32, version: &str, release: &str) -> Self {
         let version = Version::new(version);
         let release = if release.len() > 1 {
             let (_, release) = release.split_at(3);
@@ -105,14 +106,19 @@ impl PackageVersionRelease {
         } else {
             Version::new("")
         };
-        PackageVersionRelease { version, release }
+        PackageVersionRelease { epoch, version, release }
     }
 }
 
 impl PartialOrd for PackageVersionRelease {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        match self.version.partial_cmp(&other.version) {
-            Some(Ordering::Equal) => self.release.partial_cmp(&other.release),
+        match self.epoch.partial_cmp(&other.epoch) {
+            Some(Ordering::Equal) => {
+                match self.version.partial_cmp(&other.version) {
+                    Some(Ordering::Equal) => self.release.partial_cmp(&other.release),
+                    ord => ord,
+                }
+            },
             ord => ord,
         }
     }

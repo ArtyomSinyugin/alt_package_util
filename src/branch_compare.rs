@@ -14,7 +14,7 @@ pub fn compare(sisyphus: Sisyphus, mut p10: P10) -> Vec<CompareResult> {
             for (package_name, package_info) in v_sis {
                 if p10_value.contains_key(&package_name) {
                     let p10_value_to_compare = p10_value.get(&package_name).expect("Package unwrap compare error");
-                    if PackageVersionRelease::new(&package_info.version, &package_info.release) > PackageVersionRelease::new(&p10_value_to_compare.version, &p10_value_to_compare.release) {
+                    if PackageVersionRelease::new(package_info.epoch, &package_info.version, &package_info.release) > PackageVersionRelease::new(p10_value_to_compare.epoch, &p10_value_to_compare.version, &p10_value_to_compare.release) {
                         compare_temp.sisyphus_has_greater_version.push(package_info.clone());
                     }
                     p10_value.remove(&package_name);
