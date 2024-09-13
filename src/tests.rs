@@ -14,16 +14,16 @@ fn compare_test() {
     let compare_result = compare(sis_packages, p10_packages);
     
     compare_result.iter().for_each(|result| {
-        let test_result1 = result.unique_for_p10.iter().any(|package| {
+        let test_result1 = result.unique_for_sub_branch.iter().any(|package| {
             package.name == "86box_tsdtd".to_string()
         });
-        let test_result2 = result.unique_for_sisyphus.iter().any(|package| {
+        let test_result2 = result.unique_for_main_branch.iter().any(|package| {
             package.name == "389-ds-base-devel".to_string()
         });
-        let test_result3 = result.sisyphus_has_greater_version.iter().any(|package| {
+        let test_result3 = result.main_branch_has_greater_version.iter().any(|package| {
             package.name == "AFLplusplus".to_string()
         });
-        let test_result4 = result.sisyphus_has_greater_version.iter().any(|package| {
+        let test_result4 = result.main_branch_has_greater_version.iter().any(|package| {
             package.name == "9wm-debuginfo".to_string()
         });
         assert!(test_result1);

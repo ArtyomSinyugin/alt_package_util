@@ -62,10 +62,10 @@ pub struct CompareResult {
     #[serde(serialize_with = "arch_serializer")]
     #[serde(rename = "arch")]
     pub arch: Arch,
-    #[serde(rename = "unique for sisyphus")]
-    pub unique_for_sisyphus: Vec<PackageInfo>,
-    #[serde(rename = "unique for p10")]
-    pub unique_for_p10: Vec<PackageInfo>,
-    #[serde(rename = "sisyphus has greater version")]
-    pub sisyphus_has_greater_version: Vec<PackageInfo>,
+    #[serde(rename = "Unique for main branch")]
+    pub unique_for_main_branch: Vec<PackageInfo>,
+    #[serde(rename = "Unique for sub branch")]
+    pub unique_for_sub_branch: Vec<PackageInfo>,
+    #[serde(rename = "Greater version packages for main branch")]
+    pub main_branch_has_greater_version: Vec<PackageInfo>,
 }

@@ -1,5 +1,5 @@
 # ALT PM CLI
-Compares packages in p10 and sisyphus branches and gives output in json
+Compares packages in p10 and sisyphus branches and send output in json struct to the file. 
 
 ## CLI commands
 Usage: alt_pm [OPTIONS] --arch <ARCH>
@@ -8,6 +8,7 @@ Options:
   -a, --arch <ARCH>                Show result for chosen architecture: `armh`, `i586`, `x86_64`, `ppc64le`, `aarch64`, `x86_64-i586` or `noarch`
   -m, --main-branch <MAIN_BRANCH>  URL of the main branch to compare [default: https://rdb.altlinux.org/api/export/branch_binary_packages/sisyphus]
   -s, --sub-branch <SUB_BRANCH>    URL of the sub branch to compare [default: https://rdb.altlinux.org/api/export/branch_binary_packages/p10]
+  -o, --output <OUTPUT>            Set the name of the output .json file [default: output]
   -h, --help                       Print help
   -V, --version                    Print version
 

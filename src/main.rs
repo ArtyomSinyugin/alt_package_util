@@ -1,9 +1,10 @@
 use alt_pm::{branch_compare::compare, data_structurize::{arch_from_str, structurize}, fetch_from_url::fetch_packages, Sisyphus, P10};
-use clap::{Parser, Subcommand};
+use clap::Parser;
+use std::{fs::File, io::Write};
 
 // send output to file with -o flag(e.g. output.json as default or other)
 // simplify json structure 
-// do comparisment only for chosen via command line parameter architechture
+// DONE. do comparisment only for chosen via command line parameter architechture
 // DONE. make possible to compare any two branches
 // DONE. package compare via evr done. look at how can I do it via rpm crate
 
@@ -20,33 +21,9 @@ struct Cli {
     /// URL of the sub branch to compare
     #[arg(short, long, default_value = "https://rdb.altlinux.org/api/export/branch_binary_packages/p10")]
     sub_branch: String,
-}
-
-#[derive(Subcommand, Debug)]
-enum Commands {
-    /// Show all data output, including
-    /// all packages unique for p10,
-    /// all packages unique for sisyphus,
-    /// all packages with version-release greater in sisyphus then in p10 branch
-    AllOutput {
-        /// Optional: filter by architecture
-        arch: Option<String>,
-    },
-    /// Shows all packages unique for p10
-    P10Unique {
-        /// Optional: filter by architecture
-        arch: Option<String>,
-    },
-    /// Shows all packages unique for sisyphus
-    SisyphusUnique {
-        /// Optional: filter by architecture
-        arch: Option<String>,
-    },
-    /// Shows all packages with version-release greater in sisyphus then in p10 branch
-    VCheck {
-        /// Optional: filter by architecture
-        arch: Option<String>,
-    },
+    /// Set the name of the output .json file
+    #[arg(short, long, default_value = "output")]
+    output: String, 
 }
 
 fn main () {
@@ -78,7 +55,11 @@ fn main () {
         .iter()
         .find(|compare_result| compare_result.arch == input_arch)
         .expect("Could not find comparison result for choosen arch");
-   let json = serde_json::to_string_pretty(compare_result).expect("Could not recieve json from comparison result");
+    let json = serde_json::to_string_pretty(compare_result).expect("Could not recieve json from comparison result");
 
-    println!("{json}");
+    let mut output_file_name = cli.output;
+    output_file_name.push_str(".json");
+    let mut file = File::create(output_file_name).expect("Could not create output file");
+    file.write_all(json.as_bytes()).expect("Error writing json data to output file");
+
 }
