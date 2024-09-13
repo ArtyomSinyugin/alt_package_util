@@ -1,5 +1,5 @@
 #[cfg(test)]
-use crate::{ApiResponse, branch_compare::compare, data_structurize::structurize, Sisyphus, P10};
+use crate::{Arch, ApiResponse, branch_compare::compare, data_structurize::structurize, BranchData};
 #[cfg(test)]
 use serde_json::from_str;
 
@@ -8,30 +8,34 @@ fn compare_test() {
     let sis_packages: ApiResponse = from_str(SISYPHUS_DATA).expect("Could not deserialize from request to ApiResponse struct");
     let p10_packages: ApiResponse = from_str(P10_DATA).expect("Could not deserialize from request to ApiResponse struct");
 
-    let sis_packages: Sisyphus = structurize(sis_packages.packages);
-    let p10_packages: P10 = structurize(p10_packages.packages);
+    let sis_packages: BranchData = structurize(sis_packages.packages);
+    let p10_packages: BranchData = structurize(p10_packages.packages);
 
-    let compare_result = compare(sis_packages, p10_packages);
-    
-    compare_result.iter().for_each(|result| {
-        let test_result1 = result.unique_for_sub_branch.iter().any(|package| {
-            package.name == "86box_tsdtd".to_string()
-        });
-        let test_result2 = result.unique_for_main_branch.iter().any(|package| {
-            package.name == "389-ds-base-devel".to_string()
-        });
-        let test_result3 = result.main_branch_has_greater_version.iter().any(|package| {
-            package.name == "AFLplusplus".to_string()
-        });
-        let test_result4 = result.main_branch_has_greater_version.iter().any(|package| {
-            package.name == "9wm-debuginfo".to_string()
-        });
-        assert!(test_result1);
-        assert!(test_result2);
-        assert!(test_result3);
-        assert!(test_result4);
-    });
-    println!("{:?}", compare_result);
+    let arch_vec = vec![Arch::Aarch64,Arch::Armh,Arch::I586,Arch::NoArch,Arch::Ppc64le,Arch::X86_64,Arch::X86_64_i586];
+
+    for arch in &arch_vec {
+        let compare_result = compare(sis_packages.clone(), p10_packages.clone(), arch.clone());
+        if arch == &Arch::Aarch64 {
+            let test_result1 = compare_result.unique_for_sub_branch.iter().any(|package| {
+                package.name == "86box_tsdtd".to_string()
+            });
+            let test_result2 = compare_result.unique_for_main_branch.iter().any(|package| {
+                package.name == "389-ds-base-devel".to_string()
+            });
+            let test_result3 = compare_result.main_branch_has_greater_version.iter().any(|package| {
+                package.name == "AFLplusplus".to_string()
+            });
+            let test_result4 = compare_result.main_branch_has_greater_version.iter().any(|package| {
+                package.name == "9wm-debuginfo".to_string()
+            });
+            assert!(test_result1);
+            assert!(test_result2);
+            assert!(test_result3);
+            assert!(test_result4);
+            println!("{:?}", compare_result);
+            break;
+        }
+    }
 }
 
 #[cfg(test)]

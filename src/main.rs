@@ -1,4 +1,4 @@
-use alt_pm::{branch_compare::compare, data_structurize::{arch_from_str, structurize}, fetch_from_url::fetch_packages, Sisyphus, P10};
+use alt_pm::{branch_compare::compare, data_structurize::structurize, process_lib_types::arch_from_str, fetch_from_url::fetch_packages, BranchData};
 use clap::Parser;
 use std::{fs::File, io::Write};
 
@@ -36,7 +36,7 @@ fn main () {
             Vec::new()
         },
     };
-    let sis_packages: Sisyphus = structurize(url_sis_packages);
+    let main_branch_packages: BranchData = structurize(url_sis_packages);
 
     let url_p10_packages = match fetch_packages(&cli.sub_branch) {
         Ok(data) => data,
@@ -45,17 +45,13 @@ fn main () {
             Vec::new()
         },
     };
-    let p10_packages: P10 = structurize(url_p10_packages);
-
-    let compare_result = compare(sis_packages, p10_packages);
+    let sub_branch_packages: BranchData = structurize(url_p10_packages);
 
     let input_arch = arch_from_str(&cli.arch).expect("Error: unknown architecture!");
 
-    let compare_result = compare_result
-        .iter()
-        .find(|compare_result| compare_result.arch == input_arch)
-        .expect("Could not find comparison result for choosen arch");
-    let json = serde_json::to_string_pretty(compare_result).expect("Could not recieve json from comparison result");
+    let compare_result = compare(main_branch_packages, sub_branch_packages, input_arch);
+
+    let json = serde_json::to_string_pretty(&compare_result).expect("Could not recieve json from comparison result");
 
     let mut output_file_name = cli.output;
     output_file_name.push_str(".json");

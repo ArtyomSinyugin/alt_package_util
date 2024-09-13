@@ -6,10 +6,8 @@ pub mod tests;
 
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
-use crate::process_lib_types::arch_serializer;
 
-pub type Sisyphus = HashMap<Arch, HashMap<PName, PackageInfo>>;
-pub type P10 = HashMap<Arch, HashMap<PName, PackageInfo>>;
+pub type BranchData = HashMap<Arch, HashMap<PName, PackageInfo>>;
 
 pub type PName = String;
 
@@ -59,9 +57,6 @@ struct ApiResponse {
 
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub struct CompareResult {
-    #[serde(serialize_with = "arch_serializer")]
-    #[serde(rename = "arch")]
-    pub arch: Arch,
     #[serde(rename = "Unique for main branch")]
     pub unique_for_main_branch: Vec<PackageInfo>,
     #[serde(rename = "Unique for sub branch")]

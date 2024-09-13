@@ -1,55 +1,41 @@
-use crate::{CompareResult, Sisyphus, P10};
+use crate::{Arch, CompareResult, BranchData};
 use rpm::Evr;
 
-pub fn compare(sisyphus: Sisyphus, mut p10: P10) -> Vec<CompareResult> {
-    let mut compare_result: Vec<CompareResult> = Vec::new();
+pub fn compare(main_branch: BranchData, mut sub_branch: BranchData, arch: Arch) -> CompareResult {
+    let mut compare_result: CompareResult = CompareResult { 
+        unique_for_main_branch: Vec::new(), 
+        unique_for_sub_branch: Vec::new(), 
+        main_branch_has_greater_version: Vec::new() };
+        
+    let sub_branch_contains_arch: bool = sub_branch.contains_key(&arch);
 
-    for (arch, v_sis) in sisyphus {
-        let mut compare_temp: CompareResult = CompareResult { 
-            arch: arch.clone(), 
-            unique_for_main_branch: Vec::new(), 
-            unique_for_sub_branch: Vec::new(), 
-            main_branch_has_greater_version: Vec::new() };
-        if p10.contains_key(&arch) {
-            let p10_value = p10.get_mut(&arch).expect("Could not get value in p10 by sisyphus arch");
-            for (package_name, package_info) in v_sis {
-                if p10_value.contains_key(&package_name) {
-                    let p10_value_to_compare = p10_value.get(&package_name).expect("Package unwrap compare error");
-                    if Evr::new(&package_info.epoch.to_string(), &package_info.version, &package_info.release) > Evr::new(&p10_value_to_compare.epoch.to_string(), &p10_value_to_compare.version, &p10_value_to_compare.release) {
-                        compare_temp.main_branch_has_greater_version.push(package_info.clone());
+    if let Some(main_branch_arch_packages) = main_branch.get(&arch) {
+        if sub_branch_contains_arch {
+            let sub_branch_arch_packages = sub_branch.get_mut(&arch).expect("Could not get value in p10 by sisyphus arch");
+            for (package_name, package_info) in main_branch_arch_packages {
+                if sub_branch_arch_packages.contains_key(package_name) {
+                    let sub_branch_value_to_compare = sub_branch_arch_packages.get(package_name).expect("Package unwrap compare error");
+                    if Evr::new(&package_info.epoch.to_string(), &package_info.version, &package_info.release) > Evr::new(&sub_branch_value_to_compare.epoch.to_string(), &sub_branch_value_to_compare.version, &sub_branch_value_to_compare.release) {
+                        compare_result.main_branch_has_greater_version.push(package_info.clone());
                     }
-                    p10_value.remove(&package_name);
+                    sub_branch_arch_packages.remove(package_name);
                 } else {
-                    compare_temp.unique_for_main_branch.push(package_info);
+                    compare_result.unique_for_main_branch.push(package_info.clone());
                 }
             }
         } else {
-            // Arch is only in Sis. So, all packages are also only in sis
-            for (_, package_info) in v_sis {
-                compare_temp.unique_for_main_branch.push(package_info);
+            // Arch is only in main branch. So, all packages are also only in main
+            for (_, package_info) in main_branch_arch_packages {
+                compare_result.unique_for_main_branch.push(package_info.clone());
             }
         }
-        compare_result.push(compare_temp);
     }
 
-    for (arch, v_p10) in p10 {
-        let mut compare_temp: CompareResult = CompareResult { 
-            arch: arch.clone(), 
-            unique_for_main_branch: Vec::new(), 
-            unique_for_sub_branch: Vec::new(), 
-            main_branch_has_greater_version: Vec::new() };
-        for (_, package_info) in v_p10 {
-            compare_temp.unique_for_sub_branch.push(package_info);
-        }
-        if compare_result.iter().any(|match_result| &match_result.arch == &arch) {
-            compare_result.iter_mut().for_each(|compare_result| {
-                if &compare_result.arch == &arch {
-                    compare_result.unique_for_sub_branch.append(compare_temp.unique_for_sub_branch.as_mut());
-                }
-            });
-        } else {
-            compare_result.push(compare_temp);
+    if let Some(sub_branch_arch_packages) = sub_branch.get(&arch) {
+        for (_, package_info) in sub_branch_arch_packages {
+            compare_result.unique_for_sub_branch.push(package_info.clone());
         }
     }
+
     compare_result
 }
