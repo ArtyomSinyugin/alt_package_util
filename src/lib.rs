@@ -1,7 +1,6 @@
 pub mod fetch_from_url;
 pub mod branch_compare;
 pub mod data_structurize;
-pub mod versions_compare;
 pub mod process_lib_types;
 pub mod tests;
 
