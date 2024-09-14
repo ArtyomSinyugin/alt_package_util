@@ -6,8 +6,8 @@ Usage: `alt_pm [OPTIONS] --arch <ARCH>`
 
 Options:
 *  `-a, --arch <ARCH>                `Required parameter! Shows the result for chosen architecture: `armh`, `i586`, `x86_64`, `ppc64le`, `aarch64`, `x86_64-i586` or `noarch`
-*  `-m, --main-branch <MAIN_BRANCH>  `URL of the main branch to compare [default: `sisyphus`]
-*  `-s, --sub-branch <SUB_BRANCH>    `URL of the sub branch to compare [default: `p10`]
+*  `-m, --main-branch <MAIN_BRANCH>  `Input main branch name to compare [default: `sisyphus`]
+*  `-s, --sub-branch <SUB_BRANCH>    `Input sub branch name to compare [default: `p10`]
 *  `-o, --output <OUTPUT>            `Set the name of the output .json file [default: `output`]
 *  `-h, --help                       `Print help
 *  `-V, --version                    `Print version
