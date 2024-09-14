@@ -1,4 +1,4 @@
-use alt_pm::{branch_compare::compare, data_structurize::structurize, process_lib_types::arch_from_str, fetch_from_url::fetch_packages, BranchData};
+use alt_pm::{BRANCHES_URL, branch_compare::compare, data_structurize::structurize, process_lib_types::arch_from_str, fetch_from_url::fetch_packages, BranchData};
 use clap::Parser;
 use std::{fs::File, io::Write};
 
@@ -15,11 +15,11 @@ struct Cli {
     /// Required parameter! Shows the result for chosen architecture: armh, i586, x86_64, ppc64le, aarch64, x86_64-i586 or noarch
     #[arg(short, long)]
     arch: String,
-    /// URL of the main branch to compare
-    #[arg(short, long, default_value = "https://rdb.altlinux.org/api/export/branch_binary_packages/sisyphus")]
+    /// Input main branch name to compare
+    #[arg(short, long, default_value = "sisyphus")]
     main_branch: String,
-    /// URL of the sub branch to compare
-    #[arg(short, long, default_value = "https://rdb.altlinux.org/api/export/branch_binary_packages/p10")]
+    /// Input sub branch name to compare
+    #[arg(short, long, default_value = "p10")]
     sub_branch: String,
     /// Set the name of the output .json file
     #[arg(short, long, default_value = "output")]
@@ -28,24 +28,26 @@ struct Cli {
 
 fn main () {
     let cli = Cli::parse();
+    let main_branch_url = format!("{BRANCHES_URL}{}", &cli.main_branch.to_lowercase());
+    let sub_branch_url = format!("{BRANCHES_URL}{}", &cli.sub_branch.to_lowercase());
 
-    let url_sis_packages = match fetch_packages(&cli.main_branch) {
+    let url_main_branch_packages = match fetch_packages(&main_branch_url) {
         Ok(data) => data,
         Err(_) =>{ 
-            println!("No data from {}!", &cli.main_branch);
+            println!("No data from {}! Check the correctness of branch name", &cli.main_branch);
             Vec::new()
         },
     };
-    let main_branch_packages: BranchData = structurize(url_sis_packages);
-
-    let url_p10_packages = match fetch_packages(&cli.sub_branch) {
+    let url_sub_branch_packages = match fetch_packages(&sub_branch_url) {
         Ok(data) => data,
         Err(_) =>{ 
-            println!("No data from {}!", &cli.main_branch);
+            println!("No data from {}! Check the correctness of branch name", &cli.sub_branch);
             Vec::new()
         },
     };
-    let sub_branch_packages: BranchData = structurize(url_p10_packages);
+
+    let main_branch_packages: BranchData = structurize(url_main_branch_packages);
+    let sub_branch_packages: BranchData = structurize(url_sub_branch_packages);
 
     let input_arch = arch_from_str(&cli.arch).expect("Error: unknown architecture!");
 

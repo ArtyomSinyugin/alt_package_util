@@ -6,11 +6,13 @@ Usage: `alt_pm [OPTIONS] --arch <ARCH>`
 
 Options:
 *  `-a, --arch <ARCH>                `Required parameter! Shows the result for chosen architecture: `armh`, `i586`, `x86_64`, `ppc64le`, `aarch64`, `x86_64-i586` or `noarch`
-*  `-m, --main-branch <MAIN_BRANCH>  `URL of the main branch to compare [default: https://rdb.altlinux.org/api/export/branch_binary_packages/sisyphus]
-*  `-s, --sub-branch <SUB_BRANCH>    `URL of the sub branch to compare [default: https://rdb.altlinux.org/api/export/branch_binary_packages/p10]
-*  `-o, --output <OUTPUT>            `Set the name of the output .json file [default: output]
+*  `-m, --main-branch <MAIN_BRANCH>  `URL of the main branch to compare [default: `sisyphus`]
+*  `-s, --sub-branch <SUB_BRANCH>    `URL of the sub branch to compare [default: `p10`]
+*  `-o, --output <OUTPUT>            `Set the name of the output .json file [default: `output`]
 *  `-h, --help                       `Print help
 *  `-V, --version                    `Print version
+
+ Branches available for comparison with each other: `sisyphus`, `p10`, `p11`, `p9`
 
 Usage examples: 
 - `alt_pm --arch i586` - this command will compare default branches sisyphus and p10 for `i586` arch and will send output to `output.json` file 

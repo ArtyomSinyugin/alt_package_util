@@ -11,6 +11,8 @@ pub type BranchData = HashMap<Arch, HashMap<PName, PackageInfo>>;
 
 pub type PName = String;
 
+pub const BRANCHES_URL: &str = "https://rdb.altlinux.org/api/export/branch_binary_packages/";
+
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 #[allow(non_camel_case_types)]
 pub enum Arch {

@@ -5,16 +5,16 @@ use serde_json::from_str;
 
 #[test]
 fn compare_test() {
-    let sis_packages: ApiResponse = from_str(SISYPHUS_DATA).expect("Could not deserialize from request to ApiResponse struct");
-    let p10_packages: ApiResponse = from_str(P10_DATA).expect("Could not deserialize from request to ApiResponse struct");
+    let main_branch: ApiResponse = from_str(SISYPHUS_DATA).expect("Could not deserialize from request to ApiResponse struct");
+    let sub_branch: ApiResponse = from_str(P10_DATA).expect("Could not deserialize from request to ApiResponse struct");
 
-    let sis_packages: BranchData = structurize(sis_packages.packages);
-    let p10_packages: BranchData = structurize(p10_packages.packages);
+    let main_branch: BranchData = structurize(main_branch.packages);
+    let sub_branch: BranchData = structurize(sub_branch.packages);
 
     let arch_vec = vec![Arch::Aarch64,Arch::Armh,Arch::I586,Arch::NoArch,Arch::Ppc64le,Arch::X86_64,Arch::X86_64_i586];
 
     for arch in &arch_vec {
-        let compare_result = compare(sis_packages.clone(), p10_packages.clone(), arch.clone());
+        let compare_result = compare(main_branch.clone(), sub_branch.clone(), arch.clone());
         if arch == &Arch::Aarch64 {
             let test_result1 = compare_result.unique_for_sub_branch.iter().any(|package| {
                 package.name == "86box_tsdtd".to_string()
@@ -70,3 +70,23 @@ const P10_DATA: &str = r#"
     {"name": "none-debuginfo", "epoch": 0, "version": "6.4.1", "release": "alt2", "arch": "aarch64", "disttag": "sisyphus+259420.100.1.1", "buildtime": 1602159269, "source": "9wm"} 
     ]}
 "#;
+
+#[test]
+fn parse_arch() {
+    use std::collections::HashSet;
+    use crate::{BRANCHES_URL, fetch_from_url::fetch_packages};
+
+    const BRANCH: &str = "p11";
+
+    let url = format!("{BRANCHES_URL}{BRANCH}");
+    let data = fetch_packages(&url).expect("No data from test url");
+    let mut arch_map: HashSet<String> = HashSet::new();
+
+    for package in data {
+        arch_map.insert(package.arch);
+    }
+
+    for k in arch_map {
+        println!("{k}");
+    }
+}
