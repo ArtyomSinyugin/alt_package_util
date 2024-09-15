@@ -16,7 +16,7 @@ Options:
 
 Usage examples: 
 - `alt_pm --arch i586` - this command will compare default branches sisyphus and p10 for `i586` arch and will send output to `output.json` file 
-- `alt_pm --a i586 -m <URL> -s <URL> -o i586` - this will compare branches from URLs and will send output to `i586.json` file 
+- `alt_pm -a i586 -m <BRANCH> -s <BRANCH> -o i586` - this will compare branches and will send output to `i586.json` file 
 
 ## Installation
 The recommended way of ALT PM CLI installation is via `cargo` from rust tools. 
